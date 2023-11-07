@@ -16,8 +16,13 @@ const usuariosPut = (req, res = response) => {
 }
 
 const usuariosPost = (req, res = response) => {
+
+    // Aca extraemos la data que se envia
+    const body = req.body;
+
     res.json({
-        msg: 'Get API response post - controllers'
+        msg: 'Get API response post - controllers',
+        body
     });
 }
 
