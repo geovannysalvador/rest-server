@@ -53,9 +53,6 @@ const usuariosPatch = (req, res = response) => {
 
 
 
-
-
-
 module.exports = {
     usuariosGet,
     usuariosPut,
