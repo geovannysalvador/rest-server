@@ -1,5 +1,7 @@
 // Se importa porque no sabe que es res por ello se coloca res = response. Aunque sea redundante
-const { response, request } = require('express')
+const { response, request } = require('express');
+// Importar modelo 
+const Usuario = require('../models/usuario');
 
 // Crear funciones y exportarlas al archivo de routes/usuarios
 
@@ -27,15 +29,18 @@ const usuariosPut = (req, res = response) => {
     });
 }
 
-const usuariosPost = (req, res = response) => {
+const usuariosPost = async (req, res = response) => {
 
     // Aca extraemos la data que se envia
-    const {nombre, edad} = req.body;
+    const body = req.body;
+    // Crea la instancia
+    const usuario = new Usuario(body);
+    // Graba el registro
+    await usuario.save();
 
     res.json({
         msg: 'Get API response post - controllers',
-        nombre, 
-        edad
+        usuario,
     });
 }
 
