@@ -1,5 +1,7 @@
 // Se importa porque no sabe que es res por ello se coloca res = response. Aunque sea redundante
 const { response, request } = require('express');
+// Encriptar contrasenia
+const bcryptjs = require('bcryptjs')
 // Importar modelo 
 const Usuario = require('../models/usuario');
 
@@ -32,10 +34,14 @@ const usuariosPut = (req, res = response) => {
 const usuariosPost = async (req, res = response) => {
 
     // Aca extraemos la data que se envia
-    const body = req.body;
+    const {nombre, correo, password, rol} = req.body;
     // Crea la instancia
-    const usuario = new Usuario(body);
-    // Graba el registro
+    const usuario = new Usuario({nombre, correo, password, rol});
+    // Ver si el correo existe 
+    // Encriptar la contraseña
+    const salt = bcryptjs.genSaltSync();
+    usuario.password = bcryptjs.hashSync( password, salt )
+    // Graba el registro en BD
     await usuario.save();
 
     res.json({
