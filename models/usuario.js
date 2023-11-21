@@ -34,6 +34,7 @@ const UsuarioSchema = Schema({
     },
 });
 
+// Esconder algunos argumento para mostrar en postman en la BD si se ve
 UsuarioSchema.methods.toJSON = function (){
     const { __v, password, ...usuario} = this.toObject();
     return usuario;

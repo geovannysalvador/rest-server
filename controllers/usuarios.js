@@ -39,13 +39,7 @@ const usuariosPost = async (req, res = response) => {
     const {nombre, correo, password, rol} = req.body;
     // Crea la instancia crear el movelo con los que necesitamos
     const usuario = new Usuario({nombre, correo, password, rol});
-    // Ver si el correo existe 
-    const existeEmail = await Usuario.findOne({correo});
-        if(existeEmail){
-            return res.status(400).json({
-                msg: 'El correo ya existe'
-            });
-        }
+    // Ver si el correo existe>> este se creo ebn los helpers para mejor codificacion
     // Encriptar la contraseña
     const salt = bcryptjs.genSaltSync();
     usuario.password = bcryptjs.hashSync( password, salt )
