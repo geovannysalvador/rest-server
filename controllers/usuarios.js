@@ -4,7 +4,7 @@ const { response, request } = require('express');
 const bcryptjs = require('bcryptjs')
 // Importar modelo 
 const Usuario = require('../models/usuario');
-const { validationResult } = require('express-validator');
+
 
 // Crear funciones y exportarlas al archivo de routes/usuarios
 
@@ -34,14 +34,10 @@ const usuariosPut = (req, res = response) => {
 
 const usuariosPost = async (req, res = response) => {
 
-    const errors = validationResult(req);
-    if(!errors.isEmpty()){
-        return res.status(400).json(errors)
-    }
 
     // Aca extraemos la data que se envia
     const {nombre, correo, password, rol} = req.body;
-    // Crea la instancia
+    // Crea la instancia crear el movelo con los que necesitamos
     const usuario = new Usuario({nombre, correo, password, rol});
     // Ver si el correo existe 
     const existeEmail = await Usuario.findOne({correo});
@@ -57,7 +53,6 @@ const usuariosPost = async (req, res = response) => {
     await usuario.save();
 
     res.json({
-        msg: 'Get API response post - controllers',
         usuario,
     });
 }
