@@ -21,14 +21,23 @@ const usuariosGet = (req = request, res = response) => {
     });
 }
 
-const usuariosPut = (req, res = response) => {
+const usuariosPut = async (req, res = response) => {
 
     // En la ruta de indico que es ID y se obtoene de la siguiente forma
     const {id} = req.params;
+    const { password, google, correo, ...resto } = req.body;
+    // validar contra la BAse de datos si existe password
+    if(password){
+        // Encriptar la contraseña
+        const salt = bcryptjs.genSaltSync();
+        resto.password = bcryptjs.hashSync( password, salt );
+    }
+
+    const usuario = await Usuario.findByIdAndUpdate(id, resto);
 
     res.json({
-        msg: 'Get API response put - controllers',
-        id
+        msg: 'Usuario actualizado',
+        usuario
     });
 }
 
