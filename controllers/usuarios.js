@@ -11,17 +11,22 @@ const Usuario = require('../models/usuario');
 const usuariosGet = async (req = request, res = response) => {
 
     const {limite = 5, desde = 0 } = req.query;
-    const usuarios = await Usuario.find({estado: true })
+
+    // Ambos await deben de ir juntos ya que no depende uno del otro para continuar 
+    // No continua hastq que ambas funciones y se ejecutan ambas
+    // const resp = await Promise.all([
+        const [total, usuarios] = await Promise.all([
+        Usuario.countDocuments({estado: true }),
+        Usuario.find({estado: true })
         .skip(Number(desde))
         .limit(Number(limite))
+    ]);
 
-    const total = await Usuario.countDocuments({estado: true });
-
-
-
+    // res.json({resp});
     res.json({
         total,
-        usuarios});
+        usuarios,
+    });
 }
 
 const usuariosPut = async (req, res = response) => {
@@ -44,7 +49,7 @@ const usuariosPut = async (req, res = response) => {
     });
 }
 
-const usuariosPost = async (req, res = response) => {
+const usuariosPost = async (req = request, res = response) => {
 
 
     // Aca extraemos la data que se envia
@@ -63,13 +68,22 @@ const usuariosPost = async (req, res = response) => {
     });
 }
 
-const usuariosDelete = (req, res = response) => {
+const usuariosDelete = async (req = request, res = response) => {
+
+    const {id} = req.params;
+
+    // Eliminacion fisica de la BD
+    // const usuario = await Usuario.findByIdAndDelete(id);
+    // Cambiarle el estado y no borrarlo permanetemente
+    const usuario = await Usuario.findByIdAndUpdate(id, {estado: false });
+
     res.json({
-        msg: 'Get API response delete - controllers'
+        msg: 'Usuario eliminado',
+        usuario,
     });
 }
 
-const usuariosPatch = (req, res = response) => {
+const usuariosPatch = (req =  request, res = response) => {
     res.json({
         msg: 'Get API response patch - controllers'
     });
