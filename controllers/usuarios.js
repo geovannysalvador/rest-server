@@ -8,24 +8,27 @@ const Usuario = require('../models/usuario');
 
 // Crear funciones y exportarlas al archivo de routes/usuarios
 
-const usuariosGet = (req = request, res = response) => {
+const usuariosGet = async (req = request, res = response) => {
 
-    // const query = req.query;
-    const {q, nombre, apiKey} = req.query;
+    const {limite = 5, desde = 0 } = req.query;
+    const usuarios = await Usuario.find({estado: true })
+        .skip(Number(desde))
+        .limit(Number(limite))
+
+    const total = await Usuario.countDocuments({estado: true });
+
+
 
     res.json({
-        msg: 'Get API response get - controllers',
-        q, 
-        nombre,
-        apiKey
-    });
+        total,
+        usuarios});
 }
 
 const usuariosPut = async (req, res = response) => {
 
     // En la ruta de indico que es ID y se obtoene de la siguiente forma
     const {id} = req.params;
-    const { password, google, correo, ...resto } = req.body;
+    const { _id, password, google, correo, ...resto } = req.body;
     // validar contra la BAse de datos si existe password
     if(password){
         // Encriptar la contraseña
