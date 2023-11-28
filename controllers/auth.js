@@ -1,7 +1,8 @@
 const { response, request } = require("express");
 const bcryptjs = require('bcryptjs')
 
-const Usuario = require('../models/usuario')
+const Usuario = require('../models/usuario');
+const { generarJWT } = require("../helpers/generar-jwt");
 
 
 
@@ -32,11 +33,14 @@ const login = async (req=request, res = response) => {
                 msg: 'Contraseña incorrecta'
             })
         }
-        // Generar un JWT
+        // Usar un JWT
+        const token = await generarJWT( usuario.id )
 
         res.json({
-            msg: 'login exitoso',
+            usuario,
+            token,
         })
+        
     } catch (error) {
         console.log(error)
 
