@@ -5,9 +5,15 @@ const { check } = require('express-validator');
 const { usuariosGet, usuariosPut, usuariosPost, usuariosDelete, usuariosPatch } = require('../controllers/usuarios');
 const { esRolValido, emaiExiste, idUsuarioExiste } = require('../helpers/db-validators');
 
-const { validarCampos } = require('../middlewares/validar-campos');
-const { validarJWT } = require('../middlewares/validar-jwt');
-const { esAdminRole, elRolEs } = require('../middlewares/validar-roles');
+// const { validarCampos } = require('../middlewares/validar-campos');
+// const { validarJWT } = require('../middlewares/validar-jwt');
+// const { esAdminRole, elRolEs } = require('../middlewares/validar-roles');
+const {
+    validarCampos,
+    validarJWT,
+    esAdminRole,
+    elRolEs,    
+} = require('../middlewares')
 
 
 const router = Router();
