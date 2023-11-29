@@ -1,7 +1,7 @@
 // Se importa porque no sabe que es res por ello se coloca res = response. Aunque sea redundante
 const { response, request } = require('express');
 // Encriptar contrasenia
-const bcryptjs = require('bcryptjs')
+const bcryptjs = require('bcryptjs');
 // Importar modelo 
 const Usuario = require('../models/usuario');
 
@@ -76,10 +76,13 @@ const usuariosDelete = async (req = request, res = response) => {
     // const usuario = await Usuario.findByIdAndDelete(id);
     // Cambiarle el estado y no borrarlo permanetemente
     const usuario = await Usuario.findByIdAndUpdate(id, {estado: false });
+    // Solo asignamos usuarioAtuthenticado que conteta la info de la req.usuario para luego mostrarla
+    // const usuarioAtuthenticado = req.usuario;
 
     res.json({
         msg: 'Usuario eliminado',
         usuario,
+        // usuarioAtuthenticado,
     });
 }
 
