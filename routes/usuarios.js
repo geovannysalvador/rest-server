@@ -7,6 +7,7 @@ const { esRolValido, emaiExiste, idUsuarioExiste } = require('../helpers/db-vali
 
 const { validarCampos } = require('../middlewares/validar-campos');
 const { validarJWT } = require('../middlewares/validar-jwt');
+const { esAdminRole, elRolEs } = require('../middlewares/validar-roles');
 
 
 const router = Router();
@@ -36,6 +37,8 @@ router.post('/', [
 
 router.delete('/:id', [
     validarJWT,
+    // esAdminRole,
+    elRolEs('ADMIN', 'VENTAS'),
     check('id', 'No es un Id valido').isMongoId(),
     check('id').custom(idUsuarioExiste),
     //validarcampos Ve si hay problemas si lo hay no continua con el UsuaruiosPost
