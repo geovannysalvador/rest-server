@@ -34,7 +34,7 @@ const login = async (req=request, res = response) => {
                 msg: 'Contraseña incorrecta'
             })
         }
-        // Usar un JWT
+        // Usar un JWT / generarlo
         const token = await generarJWT( usuario.id )
 
         res.json({
@@ -54,25 +54,54 @@ const login = async (req=request, res = response) => {
 
 }
 
-const googleSingIn = async ( req=request, res = response ) =>{
+const googleSingIn = async(req, res = response) => {
 
-    const {id_token} = req.body;
-
+    const { id_token } = req.body;
+    
     try {
+        const { correo, nombre, img } = await googleVerify( id_token );
+
+        let usuario = await Usuario.findOne({ correo });
+
+        if ( !usuario ) {
+            // Tengo que crearlo
+            const data = {
+                nombre,
+                correo,
+                password: ':P',
+                img,
+                google: true
+            };
+
+            usuario = new Usuario( data );
+            await usuario.save();
+        }
+
+        // Si el usuario en DB
+        if ( !usuario.estado ) {
+            return res.status(401).json({
+                msg: 'Hable con el administrador, usuario bloqueado'
+            });
+        }
+
+        // Generar el JWT
+        const token = await generarJWT( usuario.id );
         
-        const googleUser = await googleVerify(id_token);
-        console.log(googleUser);
-
         res.json({
-            msg: 'Todo bien Google Singin',
-            id_token
+            usuario,
+            token
         });
-
+        
     } catch (error) {
-        json.status(400).json({
-            msg: 'El token no se pudo verificar'
-        });
+
+        console.log(error)
+
+        res.status(500).json({
+            msg: 'Algo salio mal'
+        })
+
     }
+
 
 
 }
