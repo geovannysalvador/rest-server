@@ -3,9 +3,10 @@ const { Router } = require('express');
 const { check } = require('express-validator');
 
 const { usuariosGet, usuariosPut, usuariosPost, usuariosDelete, usuariosPatch } = require('../controllers/usuarios');
+const { esRolValido, emaiExiste, idUsuarioExiste } = require('../helpers/db-validators');
 
 const { validarCampos } = require('../middlewares/validar-campos');
-const { esRolValido, emaiExiste, idUsuarioExiste } = require('../helpers/db-validators');
+const { validarJWT } = require('../middlewares/validar-jwt');
 
 
 const router = Router();
@@ -34,6 +35,7 @@ router.post('/', [
 ], usuariosPost);
 
 router.delete('/:id', [
+    validarJWT,
     check('id', 'No es un Id valido').isMongoId(),
     check('id').custom(idUsuarioExiste),
     //validarcampos Ve si hay problemas si lo hay no continua con el UsuaruiosPost
