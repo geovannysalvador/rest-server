@@ -1,8 +1,6 @@
 // Se importa porque no sabe que es res por ello se coloca res = response. Aunque sea redundante
 const { response, request } = require('express');
 const { Categoria } = require('../models');
-const categoria = require('../models/categoria');
-const usuario = require('../models/usuario');
 
 
 const optemerCategorias = async (req = request, res = response) => {
@@ -13,8 +11,8 @@ const optemerCategorias = async (req = request, res = response) => {
     // No continua hastq que ambas funciones y se ejecutan ambas
     // const resp = await Promise.all([
         const [total, categorias] = await Promise.all([
-        categoria.countDocuments({estado: true }),
-        categoria.find({estado: true })
+        Categoria.countDocuments({estado: true }),
+        Categoria.find({estado: true })
         .populate('usuario', 'nombre')
         .skip(Number(desde))
         .limit(Number(limite))

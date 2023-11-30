@@ -1,14 +1,11 @@
 const { Router } = require('express');
 const { check } = require('express-validator');
-const { validarCampos, validarJWT, esAdminRole } = require('../middlewares');
-const { crearCategoria, 
-        optemerCategorias, 
-        optemerCategoria, 
-        actualizarCategoria, 
-        eliminarCategoria, } = require('../controllers/categorias');
-const { existeCategoria } = require('../helpers/db-validators');
+
+const { validarCampos, validarJWT, esAdminRole, elRolEs,} = require('../middlewares');
 
 
+const { existeProducto, existeCategoria } = require('../helpers/db-validators');
+const { obtenerProductos, obtenerProducto, crearProducto, actualizarProducto, eliminarProducto } = require('../controllers/productos');
 
 const router = Router();
 
@@ -18,32 +15,34 @@ const router = Router();
 // Obtener todas las categorias - PUBLICO
 router.get('/', [
     // No hay validaciones por ser publico
-],optemerCategorias)
+],obtenerProductos);
 
 
 // Obtener una categoria por id - PUBLICO
 router.get('/:id', [
-    check('id', 'No es un Id valido').isMongoId(),
-    check('id').custom(existeCategoria),
-    validarCampos
-],optemerCategoria)
+    check('id', 'No es un Id Mongo valido').isMongoId(),
+    check('id').custom(existeProducto),
+    validarCampos,
+],obtenerProducto);
 
 
 // Crear una nueva categoria - PRIVADO - Que tenga token valido
 router.post('/', [
     validarJWT,
     check('nombre', 'El nombre es obligatorio').not().isEmpty(),
+    check('categoria', 'No es un Id de mongo').isMongoId(),
+    check('categoria').custom(existeCategoria),
     validarCampos,
-    ], crearCategoria)
+    ], crearProducto);
 
 
 // Actualizar un registro por id - TOKEN VALIDO - PRIVADO
 router.put('/:id', [
     validarJWT,
-    check('nombre', 'El nombre es obligatorio').not().isEmpty(),
-    check('id').custom(existeCategoria),
+    // check('categoria', 'No es un Id de mongo').isMongoId(),
+    check('id').custom(existeProducto),
     validarCampos,
-],actualizarCategoria)
+],actualizarProducto);
 
 
 // Borrar una categoria - PRIVADO - solo ADMIN
@@ -51,9 +50,9 @@ router.delete('/:id', [
     validarJWT,
     esAdminRole,
     check('id', 'No es un Id valido').isMongoId(),
-    check('id').custom(existeCategoria),
+    check('id').custom(existeProducto),
     validarCampos,
-],eliminarCategoria)
+],eliminarProducto);
 
 
 module.exports = router;
