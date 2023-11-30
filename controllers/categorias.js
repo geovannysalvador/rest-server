@@ -63,15 +63,45 @@ const crearCategoria = async (req = request, res = response) => {
     res.status(201).json(categoria);
 }
 
-const actualizarCategorias = () => {}
+const actualizarCategoria = async (req = request, res = response) => {
 
-const eliminarCategorias = () => {}
+        // En la ruta de indico que es ID y se obtoene de la siguiente forma
+        const {id} = req.params;
+        const { estado, usuario, ...data } = req.body;
+
+        data.nombre = data.nombre.toUpperCase();
+        // Id del usuario y due;o del toquen para saber quien lo modifico
+        data.usuario = req.usuario._id;
+
+        const categoria =  await Categoria.findByIdAndUpdate(id, data, {new: true}).populate('usuario', 'nombre'); 
+        
+        res.json({
+            msg: 'Categoria actualizada',
+            categoria
+        });
+
+}
+
+const eliminarCategoria = async (req = request, res = response) => {
+
+    const {id} = req.params;
+
+    const categoria = await Categoria.findByIdAndUpdate(id, {estado: false }, {new: true}).populate('usuario', 'nombre');
+    // Solo asignamos usuarioAtuthenticado que conteta la info de la req.usuario para luego mostrarla
+    // const usuarioAtuthenticado = req.usuario;
+
+    res.json({
+        msg: 'Categoria eliminada',
+        categoria,
+    });
+
+}
 
 
 module.exports = {
     optemerCategorias,
     optemerCategoria,
     crearCategoria,
-    actualizarCategorias,
-    eliminarCategorias
+    actualizarCategoria,
+    eliminarCategoria
 }
