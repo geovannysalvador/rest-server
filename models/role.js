@@ -1,4 +1,4 @@
-
+// Como se vera la info en la BD
 const {Schema, model} = require('mongoose');
 
 const RoleSchema = Schema({
