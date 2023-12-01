@@ -8,6 +8,7 @@ class Server {
         this.app = express();
         this.port = process.env.PORT;
         this.authPath = '/api/auth';
+        this.buscarPath = '/api/buscar';
         this.categoriasPath = '/api/categorias';
         this.productosPath = '/api/productos';
         this.usuariosPath = '/api/usuarios';
@@ -37,6 +38,7 @@ class Server {
 
     routes() {
         this.app.use(this.authPath, require('../routes/auth'));
+        this.app.use(this.buscarPath, require('../routes/busqueda'));
         this.app.use(this.categoriasPath, require('../routes/categorias'));
         this.app.use(this.productosPath, require('../routes/productos'));
         this.app.use(this.usuariosPath, require('../routes/usuarios'));
