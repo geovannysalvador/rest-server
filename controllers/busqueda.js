@@ -44,6 +44,7 @@ const buscarUsuarios = async ( termino ='', res = response ) => {
         });
 
 }
+
 const buscarCategorias = async ( termino ='', res = response ) => {
 
     // VEr si el termino es un mongo ID
@@ -95,29 +96,34 @@ const buscarProductos = async ( termino ='', res = response ) => {
 }
 
 const buscarProductosPorCategoria = async (termino = '', res = response) => {
-    try {
-        // Verificar si la categoría es un Mongo ID válido
-        const esMongoID = ObjectId.isValid(termino);
 
-        if (!esMongoID) {
-            return res.status(400).json({
-                msg: 'ID de categoría no válido',
-            });
-        }
+    // VEr si el termino es un mongo ID
+    const esMongoID = ObjectId.isValid( termino ); //manda un true o false
 
-        // Buscar productos por categoría
-        const productos = await Producto.find({ categoria: termino, estado: true })
-            .populate('categoria', 'nombre');
-
-        res.json({
-            results: productos,
-        });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({
-            msg: 'Error en el servidor',
+    if( esMongoID ){
+        const producto = await Producto.find({ categoria: termino, estado: true })
+        return res.json({
+            results: (producto) ? [producto] : []
         });
     }
+
+     // Busquedas sensibles usar una expresion regular
+     const regex = new RegExp( termino, 'i' );
+     const categoria = await Categoria.findOne({ nombre: regex });
+        if (categoria) {
+        const objectId = categoria._id;
+        console.log('ObjectId del primer resultado:', objectId);
+        } else {
+        console.log('No se encontró ninguna categoría con ese nombre');
+        }
+     // const usuarios = await Usuario.find({ nombre: termino });
+     const productos = await Producto.find({categoria: categoria._id})
+         .populate('categoria', 'nombre');
+ 
+         res.json({
+             results: productos
+         });
+   
 };
 
 
