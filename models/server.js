@@ -39,7 +39,8 @@ class Server {
         // Manejar la carga de archivos || Cualquier archivo
         this.app.use(fileUpload({
             useTempFiles : true,
-            tempFileDir : '/tmp/'
+            tempFileDir : '/tmp/',
+            createParentPath: true,
         }));
     }
 
