@@ -1,8 +1,9 @@
-
+const path = require('path')
+const fs = require('fs');
 const { request, response } = require("express");
 const { subirArchivo } = require("../helpers");
 
-const { Usuario, Producto } = require('../models')
+const { Usuario, Producto } = require('../models');
 
 
 const cargarArchivos = async (req = request, res = response,) => {
@@ -78,6 +79,19 @@ const actualizarImagen = async (req = request, res = response) => {
 
         default:
             return res.status(500).json({ msg: 'Olvide validar esto' });
+    }
+
+    // Borrar la ultima imagen si es que existe luego subir la nueva
+    // Antes de subir limpiar o borrar la img previao anterior
+    // Si la propiedad existe entra dentro del:     if( modelo.img 
+    if( modelo.img ){
+        // verificar la img del servidor y borrarla
+        const pathImagen = path.join( __dirname, '../uploads', coleccion, modelo.img );
+        // Ver si existe la imagen en si en la bd
+        if(fs.existsSync( pathImagen )){
+            fs.unlinkSync(pathImagen);
+        }
+
     }
 
     // Actualziar la imagen 
