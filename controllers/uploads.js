@@ -7,13 +7,14 @@ const { Usuario, Producto } = require('../models')
 
 const cargarArchivos = async (req = request, res = response,) => {
 
-
-    if (!req.files || Object.keys(req.files).length === 0 || !req.files.archivo) {
-        res.status(400).json({
-            msg: 'No hay archivos seleccionados'
-        });
-        return;
-    }
+    // Ya se uso el mismo codigo en el apartado de middlewares en el validar-archivo
+    // Tambien se mando a llamar en la ruta para que verifique primero
+    // if (!req.files || Object.keys(req.files).length === 0 || !req.files.archivo) {
+    //     res.status(400).json({
+    //         msg: 'No hay archivos seleccionados'
+    //     });
+    //     return;
+    // }
 
 
     try {
@@ -36,12 +37,14 @@ const cargarArchivos = async (req = request, res = response,) => {
 
 const actualizarImagen = async (req = request, res = response) => {
 
-    if (!req.files || Object.keys(req.files).length === 0 || !req.files.archivo) {
-        res.status(400).json({
-            msg: 'No hay archivos seleccionados'
-        });
-        return;
-    }
+    // Ya se uso el mismo codigo en el apartado de middlewares en el validar-archivo
+    // Tambien se mando a llamar en la ruta para que verifique primero
+    // if (!req.files || Object.keys(req.files).length === 0 || !req.files.archivo) {
+    //     res.status(400).json({
+    //         msg: 'No hay archivos seleccionados'
+    //     });
+    //     return;
+    // }
 
     const { id, coleccion, } = req.params;
 
