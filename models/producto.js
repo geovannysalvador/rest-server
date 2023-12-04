@@ -33,6 +33,9 @@ const ProductoSchema = Schema({
         type: Boolean,
         default: true,
     },
+    img: {
+        type: String,
+    },
 });
 
 // Esconder algunos argumento para mostrar en postman en la BD si se ve
