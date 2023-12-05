@@ -231,11 +231,41 @@ const mostrarImagen = async (req = request, res = response) => {
 
 }
 
+const mostrarImagenCloudinary = async (req = request, res = response) => {
+    const { id, coleccion } = req.params;
+
+    let modelo;
+
+    switch (coleccion) {
+        case 'usuarios':
+            modelo = await Usuario.findById(id);
+            break;
+
+        case 'productos':
+            modelo = await Producto.findById(id);
+            break;
+
+        default:
+            return res.status(500).json({ msg: 'Olvidé validar esto' });
+    }
+
+    if (modelo.img) {
+        // Construir la URL de Cloudinary
+        // const imgUrl = cloudinary.url(modelo.img, { secure: true, width: 400, height: 400, crop: 'fill' });
+        const imgUrl = cloudinary.url(modelo.img);
+        return res.redirect(imgUrl);
+    }
+
+    const pathNoImagen = path.join(__dirname, '../assets/noimage-220518-150756.jpg');
+    res.sendFile(pathNoImagen);
+}
+
+
 
 module.exports = {
     cargarArchivos,
     actualizarImagen,
     mostrarImagen,
     actualizarImagenCoudinary,
-    cargarArchivosCloudinary,
+    mostrarImagenCloudinary,
 }
