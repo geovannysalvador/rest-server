@@ -4,6 +4,7 @@ const { response, request } = require('express');
 const bcryptjs = require('bcryptjs');
 // Importar modelo 
 const Usuario = require('../models/usuario');
+const { subirConImagenCloudinary } = require('./uploads');
 
 
 // Crear funciones y exportarlas al archivo de routes/usuarios
@@ -68,6 +69,29 @@ const usuariosPost = async (req = request, res = response) => {
     });
 }
 
+const usuariosPostv2 = async (req = request, res = response) => {
+
+    const { tempFilePath } = req.files.archivo;
+
+    // Aca sube la imagen primero y antes de guardar toda la data del usuario
+    const img = await subirConImagenCloudinary(tempFilePath);
+
+    // Aca extraemos la data que se envia
+    const {nombre, correo, password, rol} = req.body;
+    // Crea la instancia crear el movelo con los que necesitamos
+    const usuario = new Usuario({nombre, correo, password, rol, img});
+    // Ver si el correo existe>> este se creo ebn los helpers para mejor codificacion
+    // Encriptar la contraseña
+    const salt = bcryptjs.genSaltSync();
+    usuario.password = bcryptjs.hashSync( password, salt )
+    // Graba el registro en BD
+    await usuario.save();
+
+    res.json({
+        usuario,
+    });
+}
+
 const usuariosDelete = async (req = request, res = response) => {
 
     const {id} = req.params;
@@ -100,4 +124,5 @@ module.exports = {
     usuariosPost,
     usuariosDelete,
     usuariosPatch,
+    usuariosPostv2,
 }

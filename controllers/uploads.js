@@ -260,6 +260,17 @@ const mostrarImagenCloudinary = async (req = request, res = response) => {
     res.sendFile(pathNoImagen);
 }
 
+// cargamos la imagen a cloudinary y lo almacenamos en 
+const subirConImagenCloudinary = async (imagen) => {
+
+    // La imagen viene del req || from-data
+    const { secure_url } = await cloudinary.uploader.upload(imagen);
+
+    // console.log(secure_url);
+
+    // Aca esta la URL de la imagen. 
+    return secure_url;
+}
 
 
 module.exports = {
@@ -268,4 +279,5 @@ module.exports = {
     mostrarImagen,
     actualizarImagenCoudinary,
     mostrarImagenCloudinary,
+    subirConImagenCloudinary,
 }

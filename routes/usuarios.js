@@ -2,7 +2,7 @@
 const { Router } = require('express');
 const { check } = require('express-validator');
 
-const { usuariosGet, usuariosPut, usuariosPost, usuariosDelete, usuariosPatch } = require('../controllers/usuarios');
+const { usuariosGet, usuariosPut, usuariosPost, usuariosDelete, usuariosPatch, usuariosPostv2 } = require('../controllers/usuarios');
 const { esRolValido, emaiExiste, idUsuarioExiste } = require('../helpers/db-validators');
 
 // const { validarCampos } = require('../middlewares/validar-campos');
@@ -35,6 +35,9 @@ router.post('/', [
     //validarcampos Ve si hay problemas si lo hay no continua con el UsuaruiosPost
     validarCampos
 ], usuariosPost);
+
+router.post('/v2/', [
+], usuariosPostv2);
 
 router.delete('/:id', [
     validarJWT,
